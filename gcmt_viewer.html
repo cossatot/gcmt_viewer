@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GCMT Viewer</title>
+    <link 
+      rel="stylesheet" 
+      href='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css'
+    />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+  <style>
+  html, body, #map {
+    height:100%;
+    width:100%;
+    padding:0px;
+    margin:0px;
+  }
+  </style>
+</head>
+
+<body>
+<div id="map"></div>
+  <!-- <div id="map" style="width: 600px; height: 400px"></div> -->
+  
+  <!-- <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js">
+  </script> -->
+
+  <script src="https://raw.github.com/calvinmetcalf/leaflet-ajax/master/dist/leaflet.ajax.min.js"></script>
+
+  <!-- jQuery is required for this example.  
+  <script src='https://code.jquery.com/jquery-1.11.0.min.js'></script>-->
+  
+  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js'></script>
+  
+  <script>
+
+  L.mapbox.accessToken = 'pk.eyJ1IjoiY29zc2F0b3QiLCJhIjoiVGJyMGU5cyJ9.CMKdx74guBSUyyC-L1fAoA';
+
+  // create map
+  var map = L.map('map').setView([48.103803, -121.965733], 7);
+
+  var naturalEarth = L.tileLayer('http://{s}.tiles.mapbox.com/v3/mapbox.natural-earth-2/{z}/{x}/{y}.png', {
+            maxZoom: 6,
+            minZoom: 0,
+            attribution: '&copy; Tiles Courtesy of <a href="https://www.mapbox.com" title="MapBox" target="_blank">MapBox</a>',
+          });
+
+  var cupcakeTiles = L.tileLayer('http://a.tiles.mapbox.com/v3/lyzidiamond.map-ietb6srb/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    minZoom: 6
+  });
+
+  var gcmt6_url = 'http://earth-analysis.com/gcmt_viewer/data/gcmt_icons_60plus.geojson';
+
+
+  naturalEarth.addTo(map);
+
+  cupcakeTiles.addTo(map);
+
+
+  var gcmt6 = L.mapbox.featureLayer()
+      .loadURL(gcmt6_url)
+      //.addTo(map);
+
+  // var cmt6Layer = L.mapbox.featureLayer().addTo(map);
+
+  gcmt6.on('layeradd', function(e) {
+      var marker = e.layer,
+          feature = marker.feature;
+
+      marker.setIcon(L.icon(feature.properties.icon));
+
+      });
+
+  gcmt6.addTo(map)
+
+  //cmt6Layer.setGeoJSON(gcmt6);
+
+  //geojsonLayer.addTo(map);
+
+  
+
+  
+
+
+
+
+
+  //var gcmt6 = L.mapbox.featureLayer()
+  //    .loadURL(gcmt6_url)
+  //    .addTo(map);
+
+
+//  function load() {
+//  // Fetch just the contents of a .geojson file from GitHub by passing
+//  // `application/vnd.github.v3.raw` to the Accept header
+//  // As with any other AJAX request, this technique is subject to the Same Origin Policy:
+//  // http://en.wikipedia.org/wiki/Same_origin_policy the server delivering the request should support CORS.
+//  $.ajax({
+//    headers: {
+//      'Accept': 'application/vnd.github.v3.raw'
+//    },
+//    xhrFields: {
+//      withCredentials: false
+//    },
+//    dataType: 'json',
+//    url: gh_url,
+//    success: function(geojson) {
+//        // On success add fetched data to the map.
+//        L.mapbox.featureLayer(geojson).addTo(map);
+//    }
+//  });
+//}
+//
+//$(load);
+
+
+ 
+  //var gcmt6 = L.mapbox.tileLayer('cossatot.7d4488f3'); //, {
+          //maxZoom: 4;
+          //}).addTo(map);
+
+  //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  //    maxZoom: 18,
+//}).addTo(map);
+
+  
+
+  </script>
+</body>
+</html>
