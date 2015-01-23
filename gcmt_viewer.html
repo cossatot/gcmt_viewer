@@ -19,8 +19,52 @@
   #map { position:absolute; top:0; bottom:0; width:100%; }
 </style>
 
+
 </head>
 <body>
+
+<!-- filter menu -->
+<style>
+.menu-ui {
+  background:#fff;
+  position:absolute;
+  top:10px;right:10px;
+  z-index:1;
+  border-radius:3px;
+  width:120px;
+  border:1px solid rgba(0,0,0,0.4);
+  }
+  .menu-ui a {
+    font-size:13px;
+    color:#404040;
+    display:block;
+    margin:0;padding:0;
+    padding:10px;
+    text-decoration:none;
+    border-bottom:1px solid rgba(0,0,0,0.25);
+    text-align:center;
+    }
+    .menu-ui a:first-child {
+      border-radius:3px 3px 0 0;
+      }
+    .menu-ui a:last-child {
+      border:none;
+      border-radius:0 0 3px 3px;
+      }
+    .menu-ui a:hover {
+      background:#f8f8f8;
+      color:#404040;
+      }
+    .menu-ui a.active {
+      background:#3887BE;
+      color:#FFF;
+      }
+      .menu-ui a.active:hover {
+        background:#3074a4;
+        }
+</style>
+<nav id='menu-ui' class='menu-ui'></nav>
+
 <div id='map'></div>
 
 <script>
@@ -34,73 +78,63 @@ var map = L.mapbox.map('map', 'examples.map-i86nkdio', {
         // This option disables loading tiles outside of the world bounds.
         noWrap: true
         }
-    }).setView([48.103803, -121.965733], 7);
+    }).setView([48.103803, -121.965733], 6);
+
+L.control.attribution().addTo(map).addAttribution('CMTs from globalcmt.org');
 
 
-var gcmt6_url = 'http://earth-analysis.com/gcmt_viewer/data/gcmt_icons_60plus.geojson';
+var layers = document.getElementById('menu-ui');
 
-var gcmt55_url = 'http://earth-analysis.com/gcmt_viewer/data/gcmt_icons_55plus.geojson';
+var gj_4minus_url = './data/gcmt_4-_icons.geojson'
+var gj_5_55_url = './data/gcmt_5-55_icons.geojson'
+var gj_55_6_url = './data/gcmt_55-6_icons.geojson'
+var gj_6_7_url = './data/gcmt_6-7_icons.geojson'
+var gj_7plus_url = './data/gcmt_7+_icons.geojson'
 
-var gcmt6 = L.mapbox.featureLayer()
-      .loadURL(gcmt6_url);
-      //.addTo(map);
-
-  gcmt6.on('layeradd', function(e) {
-      var marker = e.layer,
-          feature = marker.feature;
-
-      marker.setIcon(L.icon(feature.properties.icon));
-
-      });
+addLayer( L.mapbox.featureLayer().loadURL(gj_4minus_url), 'GCMT Mw > 5', 1);
+addLayer(L.mapbox.featureLayer().loadURL(gj_5_55_url), 'GCMT Mw 5-5.5', 2);
+addLayer(L.mapbox.featureLayer().loadURL(gj_55_6_url), 'GCMT Mw 5.5-6', 3);
+addLayer( L.mapbox.featureLayer().loadURL(gj_6_7_url), 'GCMT Mw 6-7', 4);
+addLayer( L.mapbox.featureLayer().loadURL(gj_7plus_url), 'GCMT Mw > 7', 5);
 
 
-gcmt6.addTo(map);
 
-// var gcmt55_url = 'http://earth-analysis.com/gcmt_viewer/data/gcmt_icons_60plus.geojson';
-// 
-// var gcmt55 = L.mapbox.featureLayer()
-//       .loadURL(gcmt55_url);
-//       //.addTo(map);
-// 
-//   gcmt55.on('layeradd', function(e) {
-//       var marker = e.layer,
-//           feature = marker.feature;
-// 
-//       marker.setIcon(L.icon(feature.properties.icon));
-// 
-//       });
-// 
-//   //gcmt6.on('layeradd', function() {
-//   //    if (map.getZoom() 
-// 
-//   gcmt6.on('ready', function(e) {
-//       var popupContent6 = e.layer,
-//           feature = popupcontent6.feature;
-// 
-// 
-//       var popupContent6 = '<h2>Event: ' + e.layer.feature.properties.event_name + '<\/h2>' +
-//           '<p>Mwc: ' + e.layer.feature.properties.Mwc + '<br \/>' +
-//           'Depth: ' + e.layer.feature.properties.depth + '\/p>';
-// 
-//       layer.bindPopup(popupContent6)
-// 
-//       });
-// 
-// 
-// 
-//   gcmt55.addTo(map);
-// 
-// map.on('zoomend', function() {
-// 
-//     if (map.getZoom() <= 7.5) {
-//       gcmt6.setFilter(function() { return true; });
-//      gcmt55.setFilter(function() { return false; });
-// 
-//       } else {
-//       gcmt6.setFilter(function() { return false; });
-//      gcmt55.setFilter(function() { return true; });
-//     }
-// });
+function addLayer(layer, name, zIndex) {
+    layer
+        .setZIndex(zIndex)
+        //.addTo(map);
+
+        .on('layeradd', function(e) {
+            var marker = e.layer,
+                feature = marker.feature;
+
+            marker.setIcon(L.icon(feature.properties.icon));
+            });
+
+    // Create a simple layer switcher that
+    // toggles layers on and off.
+    var link = document.createElement('a');
+        link.href = '#';
+        link.className = '';
+        link.innerHTML = name;
+
+    link.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (map.hasLayer(layer)) {
+            map.removeLayer(layer);
+            this.className = '';
+        } else {
+            map.addLayer(layer);
+            this.className = 'active';
+        }
+    };
+
+    layers.appendChild(link);
+}
+
+
 
 </script>
 </body>
