@@ -9,6 +9,10 @@
 <script 
   src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'>
 </script>
+<script 
+  src="http://code.jquery.com/jquery-2.1.0.min.js">
+</script>
+
 
 <link 
   href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' 
@@ -80,20 +84,40 @@ var map = L.mapbox.map('map', 'examples.map-i86nkdio', {
         }
     }).setView([48.103803, -121.965733], 6);
 
-L.control.attribution().addTo(map).addAttribution('CMTs from globalcmt.org');
+L.control.attribution().addTo(map)
+  .addAttribution('CMTs from globalcmt.org; faults from ATA, HimaTibetMap, plate boundaries from Bird 2002');
 
 
 var layers = document.getElementById('menu-ui');
 
-var gj_4minus_url = './data/gcmt_4-_icons.geojson'
-var gj_5_55_url = './data/gcmt_5-55_icons.geojson'
-var gj_55_6_url = './data/gcmt_55-6_icons.geojson'
-var gj_6_7_url = './data/gcmt_6-7_icons.geojson'
-var gj_7plus_url = './data/gcmt_7+_icons.geojson'
+var gj_4minus_url = './data/gcmt_4-_icons.geojson';
+var gj_5_55_url = './data/gcmt_5-55_icons.geojson';
+var gj_55_6_url = './data/gcmt_55-6_icons.geojson';
+var gj_6_7_url = './data/gcmt_6-7_icons.geojson';
+var gj_7plus_url = './data/gcmt_7+_icons.geojson';
 
-addLayer( L.mapbox.featureLayer().loadURL(gj_4minus_url), 'GCMT Mw > 5', 1);
-addLayer(L.mapbox.featureLayer().loadURL(gj_5_55_url), 'GCMT Mw 5-5.5', 2);
-addLayer(L.mapbox.featureLayer().loadURL(gj_55_6_url), 'GCMT Mw 5.5-6', 3);
+var HTM_url = './data/HimaTibetMap.geojson';
+var ATA_url = './data/ATA.geojson';
+var PB_url = './data/plate_bounds_bird02.geojson';
+
+$.getJSON(HTM_url, function(htm_data) {
+    HTM = L.mapbox.featureLayer(htm_data);
+    HTM.addTo(map);
+    HTM.setStyle({color: 'red'})
+    });
+
+
+$.getJSON(ATA_url, function(htm_data) {
+    ATA = L.mapbox.featureLayer(htm_data);
+    ATA.addTo(map);
+    ATA.setStyle({color: 'red'})
+    });
+
+var PB = L.mapbox.featureLayer().loadURL(PB_url).addTo(map);
+
+addLayer( L.mapbox.featureLayer().loadURL(gj_4minus_url), 'GCMT Mw < 5', 1);
+addLayer( L.mapbox.featureLayer().loadURL(gj_5_55_url), 'GCMT Mw 5-5.5', 2);
+addLayer( L.mapbox.featureLayer().loadURL(gj_55_6_url), 'GCMT Mw 5.5-6', 3);
 addLayer( L.mapbox.featureLayer().loadURL(gj_6_7_url), 'GCMT Mw 6-7', 4);
 addLayer( L.mapbox.featureLayer().loadURL(gj_7plus_url), 'GCMT Mw > 7', 5);
 
@@ -134,8 +158,7 @@ function addLayer(layer, name, zIndex) {
     layers.appendChild(link);
 }
 
-
-
 </script>
+
 </body>
 </html>
