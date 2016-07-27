@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -73,7 +74,7 @@
 
 <script>
 L.mapbox.accessToken = 'pk.eyJ1IjoiY29zc2F0b3QiLCJhIjoiVGJyMGU5cyJ9.CMKdx74guBSUyyC-L1fAoA';
-var map = L.mapbox.map('map', 'examples.map-i86nkdio', {
+var map = L.mapbox.map('map', 'mapbox.streets-satellite', {
     minZoom: 3,
     // These options apply to the tile layer in the map.
     tileLayer: {
@@ -160,5 +161,18 @@ function addLayer(layer, name, zIndex) {
 
 </script>
 
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-58415443-1', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+
+
 </body>
 </html>
+
