@@ -104,7 +104,6 @@ var HTM_url = './data/HimaTibetMap.geojson';
 var ATA_url = './data/ATA.geojson';
 var PB_url = './data/plate_bounds_bird02.geojson';
 
-/*
 $.getJSON(HTM_url, function(htm_data) {
     HTM = L.mapbox.featureLayer(htm_data);
     HTM.addTo(map);
@@ -117,7 +116,6 @@ $.getJSON(ATA_url, function(htm_data) {
     ATA.addTo(map);
     ATA.setStyle({color: 'red'})
     });
-*/
 
 var PB = L.mapbox.featureLayer().loadURL(PB_url).addTo(map);
 
@@ -127,21 +125,8 @@ var PB = L.mapbox.featureLayer().loadURL(PB_url).addTo(map);
 //var gcmt_6_7 = addLayer( L.mapbox.featureLayer().loadURL(gj_6_7_url), 'GCMT Mw 6-7', 4);
 //var gcmt_7p = addLayer( L.mapbox.featureLayer().loadURL(gj_7plus_url), 'GCMT Mw > 7', 5);
 
-//var gcmt_u5 = L.mapbox.featureLayer().loadURL(gj_4minus_url)
-//var gcmt_5_55 = L.mapbox.featureLayer().loadURL(gj_5_55_url)
-//var gcmt_55_6 = L.mapbox.featureLayer().loadURL(gj_55_6_url)
-//var gcmt_6_7 = L.mapbox.featureLayer().loadURL(gj_6_7_url)
-//var gcmt_7p = L.mapbox.featureLayer().loadURL(gj_7plus_url)
 var gcmt_geojson = L.mapbox.featureLayer().loadURL(gj_gcmt_url)
-
-
-//var gcmt_5 = L.mapbox.featureLayer().addTo(map);
-//var 
-//var gcmt_7 = L.mapbox.featureLayer().addTo(map);
-
-
 var gcmt_events = L.mapbox.featureLayer().addTo(map)
-
 
 
 gcmt_events.on('layeradd', function(e) {
@@ -150,11 +135,6 @@ gcmt_events.on('layeradd', function(e) {
   marker.setIcon(L.icon(feature.properties.icon));
 });
 
-//gcmt_7.on('layeradd', function(e) {
-//  var marker = e.layer,
-//      feature = marker.feature;
-//  marker.setIcon(L.icon(feature.properties.icon));
-//});
 
 // When map has loaded, add markers for initial view
 map.on('ready', function(e){
@@ -167,7 +147,7 @@ map.on('moveend', function(e) {
   addMarkerSubset(map);
 });
 
-
+// old function for making buttons
 function addLayer(layer, name, zIndex) {
     layer
         .setZIndex(zIndex)
@@ -257,11 +237,6 @@ function addMarkerSubset(map) {
 
   var gcmtInView = turf.within(gcmt_geojson.getGeoJSON(), currentBbox);
   gcmt_events.setGeoJSON(gcmtInView);
-  //var gcmt_u5_InView = turf.within(gcmt_u5.getGeoJSON(), currentBbox);
-  //gcmt_5.setGeoJSON(gcmt_u5_InView);
-
-  //var gcmt_7p_InView = turf.within(gcmt_7p.getGeoJSON(), currentBbox);
-  //gcmt_7.setGeoJSON(gcmt_7p_InView);
 }
 
 </script>
