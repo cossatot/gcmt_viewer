@@ -1,16 +1,12 @@
-var http = require("http");
-var url = require("url");
 var MongoClient = require("mongodb").MongoClient;
 var mongoUrl = "mongodb://admin:segfault@ds145355.mlab.com:45355/gcmt_dev";
+var express = require("express");
+var app = express();
 
 MongoClient.connect(mongoUrl, function(err, db) {
 	if (err) throw err;
-	var router = function(req, res) {
 
-		var queryData = url.parse(req.url, true).query;
-		console.log("queryData");
-		console.log(JSON.stringify(queryData));
-
+	app.get("/", function(req, res) {
 		db.collection("caitlintestcollection").findOne({}, function(err, result) {
 			res.writeHead(200, {
 				"Content-Type": "application/json",
@@ -20,7 +16,9 @@ MongoClient.connect(mongoUrl, function(err, db) {
 			res.write(JSON.stringify(result));
 			res.end();
 		});
-	};
-	var server = http.createServer(router);
-	server.listen(3000);
+	});
+
+	app.listen(3000, function() {
+		console.log("Server running on 3000");
+	});
 });
