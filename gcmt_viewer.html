@@ -66,8 +66,15 @@ $.getJSON(ATA_url, function(htm_data) {
     });
 
 var PB = L.mapbox.featureLayer().loadURL(PB_url).addTo(map);
-var gcmt_geojson = L.mapbox.featureLayer().loadURL(gj_gcmt_url)
+var gcmt_geojson = L.mapbox.featureLayer().loadURL(gj_gcmt_url).addTo(map);
 var gcmt_events = L.mapbox.featureLayer().addTo(map)
+
+console.log("PB");
+console.log(PB);
+console.log("gcmt_geojson");
+console.log(gcmt_geojson);
+console.log("gcmt_events");
+console.log(gcmt_events);
 
 // What does this do?
 gcmt_events.on('layeradd', function(e) {
@@ -79,53 +86,38 @@ gcmt_events.on('layeradd', function(e) {
 
 // When map has loaded, add markers for initial view
 map.on('ready', function(e){
-  console.log("HERE");
+  console.log("In ready() callback");
   addMarkerSubset(map);
 });
 
 // When the user has finished panning, add markers for 
 // resulting view
 map.on('moveend', function(e) {
+  console.log("In moveend callback");
   addMarkerSubset(map);
 });
 
-/** DO WE NEED THIS ANYMORE?
-// old function for making buttons
-function addLayer(layer, name, zIndex) {
-    layer
-        .setZIndex(zIndex)
-        //.addTo(map);
+function addMarkerSubset(map) {
+  console.log("Are we here?");
+  var currentBbox = boundsToGeoJSON(map);
 
-        .on('layeradd', function(e) {
-            var marker = e.layer,
-                feature = marker.feature;
+  console.log("In addMarkerSubset()");
 
-            marker.setIcon(L.icon(feature.properties.icon));
-            });
+  $.ajax({
+    'url' : 'http://localhost:3000/',
+    'success' : function(res) {
+      console.log("HERE!!!!!!!!!!");
+      console.log(res.data);
+    }
+  });
 
-    // Create a simple layer switcher that
-    // toggles layers on and off.
-    var link = document.createElement('a');
-        link.href = '#';
-        link.className = '';
-        link.innerHTML = name;
 
-    link.onclick = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (map.hasLayer(layer)) {
-            map.removeLayer(layer);
-            this.className = '';
-        } else {
-            map.addLayer(layer);
-            this.className = 'active';
-        }
-    };
-
-    layers.appendChild(link);
+  // TODO: gcmt_geojson.getGeoJSON() is undef.
+  /**
+  var gcmtInView = turf.within(gcmt_geojson.getGeoJSON(), currentBbox);
+  gcmt_events.setGeoJSON(gcmtInView);
+  **/
 }
-**/
 
 // Turn current bbox into GeoJSON polygon
 function boundsToGeoJSON(map) {
@@ -172,15 +164,9 @@ function boundsToGeoJSON(map) {
       }
     ]
   }
-
+  console.log("Returning bounding box:");
+  console.log(bboxGeoJSON);
   return bboxGeoJSON;
-}
-
-function addMarkerSubset(map) {
-  var currentBbox = boundsToGeoJSON(map);
-
-  var gcmtInView = turf.within(gcmt_geojson.getGeoJSON(), currentBbox);
-  gcmt_events.setGeoJSON(gcmtInView);
 }
 
 </script>

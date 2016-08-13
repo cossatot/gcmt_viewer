@@ -1,8 +1,14 @@
 var http = require("http");
 
-var server = http.createServer(function (request, response) {
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end("Sorry but you dun SEG-FAULTEDED!!!!\n");
-});
+var router = function(req, res) {
+	res.writeHead(200, {
+		"Content-Type": "application/json",
+		"Access-Control-Allow-Origin" : "*"
+	});
+	res.write(JSON.stringify({data : "pineapple"}));
+	res.end();
+}
+
+var server = http.createServer(router);
 
 server.listen(3000);
