@@ -1,11 +1,16 @@
 var http = require("http");
 var url = require("url");
 var MongoClient = require("mongodb").MongoClient;
-var url = "mongodb://admin:segfault@ds145355.mlab.com:45355/gcmt_dev";
+var mongoUrl = "mongodb://admin:segfault@ds145355.mlab.com:45355/gcmt_dev";
 
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(mongoUrl, function(err, db) {
 	if (err) throw err;
 	var router = function(req, res) {
+
+		var queryData = url.parse(req.url, true).query;
+		console.log("queryData");
+		console.log(JSON.stringify(queryData));
+
 		db.collection("caitlintestcollection").findOne({}, function(err, result) {
 			res.writeHead(200, {
 				"Content-Type": "application/json",
