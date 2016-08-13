@@ -48,14 +48,7 @@ L.control.attribution().addTo(map)
 
 var layers = document.getElementById('menu-ui');
 
-//var gj_gcmt_url = './data/gcmt_icons.geojson'
 var gj_gcmt_url = './data/gcmt_icons_reduced.geojson'
-var gj_4minus_url = './data/gcmt_4-_icons.geojson';
-var gj_5_55_url = './data/gcmt_5-55_icons.geojson';
-var gj_55_6_url = './data/gcmt_55-6_icons.geojson';
-var gj_6_7_url = './data/gcmt_6-7_icons.geojson';
-var gj_7plus_url = './data/gcmt_7+_icons.geojson';
-
 var HTM_url = './data/HimaTibetMap.geojson';
 var ATA_url = './data/ATA.geojson';
 var PB_url = './data/plate_bounds_bird02.geojson';
@@ -65,7 +58,6 @@ $.getJSON(HTM_url, function(htm_data) {
     HTM.addTo(map);
     HTM.setStyle({color: 'red'})
     });
-
 
 $.getJSON(ATA_url, function(htm_data) {
     ATA = L.mapbox.featureLayer(htm_data);
@@ -77,7 +69,7 @@ var PB = L.mapbox.featureLayer().loadURL(PB_url).addTo(map);
 var gcmt_geojson = L.mapbox.featureLayer().loadURL(gj_gcmt_url)
 var gcmt_events = L.mapbox.featureLayer().addTo(map)
 
-
+// What does this do?
 gcmt_events.on('layeradd', function(e) {
   var marker = e.layer,
       feature = marker.feature;
@@ -87,6 +79,7 @@ gcmt_events.on('layeradd', function(e) {
 
 // When map has loaded, add markers for initial view
 map.on('ready', function(e){
+  console.log("HERE");
   addMarkerSubset(map);
 });
 
@@ -96,6 +89,7 @@ map.on('moveend', function(e) {
   addMarkerSubset(map);
 });
 
+/** DO WE NEED THIS ANYMORE?
 // old function for making buttons
 function addLayer(layer, name, zIndex) {
     layer
@@ -131,6 +125,7 @@ function addLayer(layer, name, zIndex) {
 
     layers.appendChild(link);
 }
+**/
 
 // Turn current bbox into GeoJSON polygon
 function boundsToGeoJSON(map) {
