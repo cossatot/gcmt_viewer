@@ -104,12 +104,15 @@ function addMarkerSubset(map) {
   console.log("In addMarkerSubset()");
 
   $.ajax({
-    'url' : 'http://localhost:3000/',
-    'data' : currentBbox,
+    url : "http://localhost:3000/",
+    type: "POST",
+    contentType: "application/json",
+    dataType: "json",
+    data : JSON.stringify(currentBbox),
     error: function(jqXHR, textStatus, errorThrown) {
       console.log(textStatus, errorThrown);
     },
-    'success' : function(xhr) {
+    success : function(xhr) {
       console.log("HERE!!!!!!!!!!");
       console.log(xhr);
     }
