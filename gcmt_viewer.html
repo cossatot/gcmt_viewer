@@ -48,6 +48,7 @@ L.control.attribution().addTo(map)
 
 var layers = document.getElementById('menu-ui');
 
+/**
 var gj_gcmt_url = './data/gcmt_icons_reduced.geojson'
 var HTM_url = './data/HimaTibetMap.geojson';
 var ATA_url = './data/ATA.geojson';
@@ -67,14 +68,9 @@ $.getJSON(ATA_url, function(htm_data) {
 
 var PB = L.mapbox.featureLayer().loadURL(PB_url).addTo(map);
 var gcmt_geojson = L.mapbox.featureLayer().loadURL(gj_gcmt_url).addTo(map);
-var gcmt_events = L.mapbox.featureLayer().addTo(map)
+**/
 
-console.log("PB");
-console.log(PB);
-console.log("gcmt_geojson");
-console.log(gcmt_geojson);
-console.log("gcmt_events");
-console.log(gcmt_events);
+var gcmt_events = L.mapbox.featureLayer().addTo(map)
 
 // What does this do?
 gcmt_events.on('layeradd', function(e) {
@@ -86,23 +82,17 @@ gcmt_events.on('layeradd', function(e) {
 
 // When map has loaded, add markers for initial view
 map.on('ready', function(e){
-  console.log("In ready() callback");
   addMarkerSubset(map);
 });
 
 // When the user has finished panning, add markers for 
 // resulting view
 map.on('moveend', function(e) {
-  console.log("In moveend callback");
   addMarkerSubset(map);
 });
 
 function addMarkerSubset(map) {
-  console.log("Are we here?");
   var currentBbox = boundsToGeoJSON(map);
-
-  console.log("In addMarkerSubset()");
-
   $.ajax({
     url : "http://localhost:3000/",
     type: "POST",
@@ -113,8 +103,9 @@ function addMarkerSubset(map) {
       console.log(textStatus, errorThrown);
     },
     success : function(xhr) {
-      console.log("HERE!!!!!!!!!!");
       console.log(xhr);
+      gcmt_events.setGeoJSON(xhr);
+      console.log("HERE!!!");
     }
   });
 
@@ -171,8 +162,6 @@ function boundsToGeoJSON(map) {
       }
     ]
   }
-  console.log("Returning bounding box:");
-  console.log(bboxGeoJSON);
   return bboxGeoJSON;
 }
 

@@ -15,9 +15,6 @@ MongoClient.connect(mongoUrl, function(err, db) {
  	});
 
 	app.post("/", function(req, res) {
-
-		console.log("In / endpoint!");
-		console.log(req.body);
 		var coords = req.body.features[0].geometry.coordinates;
 		var params = {
 			"geometry.coordinates" : {
@@ -30,24 +27,9 @@ MongoClient.connect(mongoUrl, function(err, db) {
 			}
 		}
 		db.collection("caitlintestcollection").find(params).toArray(function(err, docs) {
-			console.log("RESULTS FROM DB QUERY");
-			console.log(docs);
 			res.json(docs);
 			console.log("Sent http response");
 		});
-		/**
-		db.collection("caitlintestcollection").findOne({}, function(err, result) {
-			if (err) {
-				console.log("ERROR IN DB QUERY");
-				throw err;
-			}
-			console.log("Made database call; result = ");
-			console.log(result);
-			console.log(JSON.stringify(result));
-			res.json(result);
-			console.log("Sent http response");
-		});
-		**/
 	});
 
 	app.listen(3000, function() {
