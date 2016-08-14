@@ -10,15 +10,32 @@ MongoClient.connect(mongoUrl, function(err, db) {
 
 	app.all('/', function(req, res, next) {
   		res.header("Access-Control-Allow-Origin", "*");
-  		//res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   		next();
  	});
 
-	app.get("/", function(req, res) {
+	app.post("/", function(req, res) {
 
 		console.log("In / endpoint!");
 		console.log(req.body);
-
+		var coords = req.body.features[0].geometry.coordinates;
+		var params = {
+			"geometry.coordinates" : {
+				$geoWithin: {
+					$geometry: {
+						type: "Polygon",
+						coordinates: coords
+					}
+				}
+			}
+		}
+		db.collection("caitlintestcollection").find(params).toArray(function(err, docs) {
+			console.log("RESULTS FROM DB QUERY");
+			console.log(docs);
+			res.json(docs);
+			console.log("Sent http response");
+		});
+		/**
 		db.collection("caitlintestcollection").findOne({}, function(err, result) {
 			if (err) {
 				console.log("ERROR IN DB QUERY");
@@ -27,18 +44,10 @@ MongoClient.connect(mongoUrl, function(err, db) {
 			console.log("Made database call; result = ");
 			console.log(result);
 			console.log(JSON.stringify(result));
-			/**
-			res.writeHead(200, {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin" : "*"
-			});
-			**/
-			//res.write(JSON.stringify({data : "pineapple"}));
-			//res.write(JSON.stringify(result));
 			res.json(result);
-			//res.end();
 			console.log("Sent http response");
 		});
+		**/
 	});
 
 	app.listen(3000, function() {
