@@ -106,9 +106,12 @@ function addMarkerSubset(map) {
   $.ajax({
     'url' : 'http://localhost:3000/',
     'data' : currentBbox,
-    'success' : function(res) {
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    },
+    'success' : function(xhr) {
       console.log("HERE!!!!!!!!!!");
-      console.log(res.data);
+      console.log(xhr);
     }
   });
 
