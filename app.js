@@ -10,7 +10,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
 
 	app.all('/', function(req, res, next) {
   		res.header("Access-Control-Allow-Origin", "*");
-  		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  		res.header("Access-Control-Allow-Headers", "Content-Type");
   		next();
  	});
 
@@ -28,7 +28,6 @@ MongoClient.connect(mongoUrl, function(err, db) {
 		}
 		db.collection("caitlintestcollection").find(params).toArray(function(err, docs) {
 			res.json(docs);
-			console.log("Sent http response");
 		});
 	});
 
