@@ -5,10 +5,12 @@ var bodyParser = require("body-parser");
 var app = express();
 app.use(bodyParser.json());
 
+app.use("/", express.static("public"));
+
 MongoClient.connect(mongoUrl, function(err, db) {
 	if (err) throw err;
 
-	app.all('/', function(req, res, next) {
+	app.all("/", function(req, res, next) {
   		res.header("Access-Control-Allow-Origin", "*");
   		res.header("Access-Control-Allow-Headers", "Content-Type");
   		next();

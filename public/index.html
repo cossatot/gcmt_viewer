@@ -13,12 +13,12 @@
   <script
     src="http://code.jquery.com/jquery-2.1.0.min.js">
   </script>
-  <script 
-    src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'> 
-  </script>
+  <!-- <script
+    src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'>
+  </script> -->
 
   <link
-    href='https://api.tiles.mapbox.com/mapbox.js/v2.3.0/mapbox.css' 
+    href='https://api.tiles.mapbox.com/mapbox.js/v2.3.0/mapbox.css'
     rel='stylesheet' />
   <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
@@ -85,7 +85,7 @@ map.on('ready', function(e){
   addMarkerSubset(map);
 });
 
-// When the user has finished panning, add markers for 
+// When the user has finished panning, add markers for
 // resulting view
 map.on('moveend', function(e) {
   addMarkerSubset(map);
@@ -103,7 +103,7 @@ function addMarkerSubset(map) {
       console.log(textStatus, errorThrown);
     },
     success : function(xhr) {
-      console.log(xhr);
+      // console.log(xhr);
       gcmt_events.setGeoJSON(xhr);
       console.log("HERE!!!");
     }
@@ -120,7 +120,7 @@ function addMarkerSubset(map) {
 // Turn current bbox into GeoJSON polygon
 function boundsToGeoJSON(map) {
   var currentBbox = map.getBounds();
-  // bbox format 
+  // bbox format
   var bboxGeoJSON = {
     "type": "FeatureCollection",
     "features": [
@@ -146,7 +146,7 @@ function boundsToGeoJSON(map) {
                 currentBbox._northEast.lng,
                 currentBbox._northEast.lat
               ],
-              // SE 
+              // SE
               [
                 currentBbox._northEast.lng,
                 currentBbox._southWest.lat
