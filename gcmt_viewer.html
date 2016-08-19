@@ -93,13 +93,8 @@ L.control.attribution().addTo(map)
 
 var layers = document.getElementById('menu-ui');
 
-//var gj_gcmt_url = './data/gcmt_icons.geojson'
-var gj_gcmt_url = './data/gcmt_icons_reduced.geojson'
-var gj_4minus_url = './data/gcmt_4-_icons.geojson';
-var gj_5_55_url = './data/gcmt_5-55_icons.geojson';
-var gj_55_6_url = './data/gcmt_55-6_icons.geojson';
-var gj_6_7_url = './data/gcmt_6-7_icons.geojson';
-var gj_7plus_url = './data/gcmt_7+_icons.geojson';
+var gj_gcmt_url = './data/gcmt_min_zoom.geojson';
+//var gj_gcmt_url = './data/gcmt_icons_reduced.geojson';
 
 var HTM_url = './data/HimaTibetMap.geojson';
 var ATA_url = './data/ATA.geojson';
@@ -119,12 +114,6 @@ $.getJSON(ATA_url, function(htm_data) {
     });
 
 var PB = L.mapbox.featureLayer().loadURL(PB_url).addTo(map);
-
-//var gcmt_u5 = addLayer( L.mapbox.featureLayer().loadURL(gj_4minus_url), 'GCMT Mw < 5', 1);
-//var gcmt_5_55 = addLayer( L.mapbox.featureLayer().loadURL(gj_5_55_url), 'GCMT Mw 5-5.5', 2);
-//var gcmt_55_6 = addLayer( L.mapbox.featureLayer().loadURL(gj_55_6_url), 'GCMT Mw 5.5-6', 3);
-//var gcmt_6_7 = addLayer( L.mapbox.featureLayer().loadURL(gj_6_7_url), 'GCMT Mw 6-7', 4);
-//var gcmt_7p = addLayer( L.mapbox.featureLayer().loadURL(gj_7plus_url), 'GCMT Mw > 7', 5);
 
 var gcmt_geojson = L.mapbox.featureLayer().loadURL(gj_gcmt_url)
 var gcmt_events = L.mapbox.featureLayer().addTo(map)
@@ -237,7 +226,16 @@ function addMarkerSubset(map) {
   var currentBbox = boundsToGeoJSON(map);
 
   var gcmtInView = turf.within(gcmt_geojson.getGeoJSON(), currentBbox);
-  gcmt_events.setGeoJSON(gcmtInView);
+
+  // filter on minZoom
+  var currentZoom = map.getZoom();
+
+  var gcmtAboveMinZoom = gcmtInView.features.filter(function(feature) {
+      return feature.properties.minZoom <= currentZoom;
+      });
+  
+  //gcmt_events.setGeoJSON(gcmtInView);
+  gcmt_events.setGeoJSON(gcmtAboveMinZoom);
 }
 
 </script>
