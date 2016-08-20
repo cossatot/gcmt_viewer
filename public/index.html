@@ -13,9 +13,10 @@
   <script
     src="http://code.jquery.com/jquery-2.1.0.min.js">
   </script>
-  <!-- <script
-    src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'>
-  </script> -->
+  <script 
+    type='text/javascript' 
+    src='http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js'>
+  </script>
 
   <link
     href='https://api.tiles.mapbox.com/mapbox.js/v2.3.0/mapbox.css'
@@ -44,31 +45,6 @@ var map = L.mapbox.map('map', 'mapbox.streets-satellite', {
 
 L.control.attribution().addTo(map)
   .addAttribution('CMTs from globalcmt.org; faults from ATA, HimaTibetMap, plate boundaries from Bird 2003');
-
-
-var layers = document.getElementById('menu-ui');
-
-/** TODO: add non-earthquake features back in
-var gj_gcmt_url = './data/gcmt_icons_reduced.geojson'
-var HTM_url = './data/HimaTibetMap.geojson';
-var ATA_url = './data/ATA.geojson';
-var PB_url = './data/plate_bounds_bird02.geojson';
-
-$.getJSON(HTM_url, function(htm_data) {
-    HTM = L.mapbox.featureLayer(htm_data);
-    HTM.addTo(map);
-    HTM.setStyle({color: 'red'})
-    });
-
-$.getJSON(ATA_url, function(htm_data) {
-    ATA = L.mapbox.featureLayer(htm_data);
-    ATA.addTo(map);
-    ATA.setStyle({color: 'red'})
-    });
-
-var PB = L.mapbox.featureLayer().loadURL(PB_url).addTo(map);
-var gcmt_geojson = L.mapbox.featureLayer().loadURL(gj_gcmt_url).addTo(map);
-**/
 
 var gcmt_events = L.mapbox.featureLayer().addTo(map)
 
@@ -103,18 +79,9 @@ function addMarkerSubset(map) {
       console.log(textStatus, errorThrown);
     },
     success : function(xhr) {
-      // console.log(xhr);
       gcmt_events.setGeoJSON(xhr);
-      console.log("HERE!!!");
     }
   });
-
-
-  // TODO: gcmt_geojson.getGeoJSON() is undef.
-  /**
-  var gcmtInView = turf.within(gcmt_geojson.getGeoJSON(), currentBbox);
-  gcmt_events.setGeoJSON(gcmtInView);
-  **/
 }
 
 // Turn current bbox into GeoJSON polygon
