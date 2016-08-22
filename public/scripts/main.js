@@ -11,7 +11,7 @@ L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
  subdomains: ['a','b','c']
 }).addTo( map );
 
-var myURL = jQuery( 'script[src$="leaf-demo.js"]' ).attr( 'src' ).replace( 'leaf-demo.js', '' );
+var myURL = jQuery( 'script[src$="main.js"]' ).attr( 'src' ).replace( 'main.js', '' );
 
 var myIcon = L.icon({
   iconUrl: myURL + 'images/pin24.png',
