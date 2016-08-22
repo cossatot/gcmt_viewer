@@ -1,0 +1,21 @@
+{
+  "_id": "57b8be4894aa0f7e437ed3f0",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -16.01,
+      -42.49
+    ]
+  },
+  "properties": {
+    "icon": {
+      "iconUrl": "data:image/png;base64,<etc>",
+      "iconSize": [
+        19,
+        19
+      ]
+    },
+    "title": "Mw: 4.93Depth: 15 kmDate: 2013-11-26"
+  },
+  "type": "Feature"
+}
