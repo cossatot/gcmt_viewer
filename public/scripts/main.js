@@ -29,8 +29,6 @@ map.on("moveend", function(e) {
 
 function addMarkersToMap(map) {
   $.when(getMarkersFromDB(map)).done((markers) => {
-    console.log("markers");
-    console.log(markers);
     var markerClusters = L.markerClusterGroup();
     for ( var i = 0; i < markers.length; ++i )
     {
@@ -44,14 +42,12 @@ function addMarkersToMap(map) {
       markerClusters.addLayer( m );
     }
     map.addLayer( markerClusters );
-    console.log("done with addMarkerSubset");
   });
 }
 
 
 function getMarkersFromDB(map) {
   var currentBbox = boundsToGeoJSON(map);
-  console.log(currentBbox);
   return $.ajax({
     url : "http://localhost:3000/",
     type: "POST",
