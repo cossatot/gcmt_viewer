@@ -38,7 +38,7 @@ function addMarkersToMap(map) {
 
       var m = L.marker([markers[i].geometry.coordinates[1], 
                         markers[i].geometry.coordinates[0]], 
-                        {icon: myIcon})
+                        {icon: L.icon(markers[i].properties.icon)})
                       .bindPopup( popup );
 
       markerClusters.addLayer( m );
