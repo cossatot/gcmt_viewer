@@ -3,6 +3,8 @@ services:
 
   webserver:
     build: ./webserver
+#    volumes:
+#      - ./:/app
     ports:
       - "3000:3000"
     links:
@@ -17,3 +19,10 @@ services:
     image: mongo
     ports:
       - "27017:27017"
+
+#    volumes_from:
+#      - mongodata
+#  mongodata:
+#    image: tianon/true
+#    volumes:
+#      - /data/db
