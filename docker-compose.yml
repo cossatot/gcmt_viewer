@@ -1,20 +1,19 @@
 version: "2"
 services:
-  web:
-    build: .
-    volumes:
-      - ./:/app
+
+  webserver:
+    build: ./webserver
     ports:
       - "3000:3000"
     links:
       - mongo
+
+  mongo-seed:
+    build: ./mongo-seed
+    links:
+      - mongo
+
   mongo:
     image: mongo
     ports:
       - "27017:27017"
-    volumes_from:
-      - mongodata
-  mongodata:
-    image: tianon/true
-    volumes:
-      - /data/db
