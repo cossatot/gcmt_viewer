@@ -1,13 +1,25 @@
+/**
 var map = L.map( 'map', {
   center: [48.103803, -121.965733],
   minZoom: 5,
   zoom: 6
 });
+**/
 
-L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
- attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
- subdomains: ['a','b','c']
-}).addTo( map );
+L.mapbox.accessToken = 'pk.eyJ1IjoiY29zc2F0b3QiLCJhIjoiVGJyMGU5cyJ9.CMKdx74guBSUyyC-L1fAoA';
+var map = L.mapbox.map('map', 'mapbox.streets-satellite', {
+    minZoom: 5,
+    // These options apply to the tile layer in the map.
+    tileLayer: {
+        // This map option disables world wrapping. by default, it is false.
+        continuousWorld: false,
+        // This option disables loading tiles outside of the world bounds.
+        noWrap: true
+        }
+    }).setView([48.103803, -121.965733], 6);
+
+L.control.attribution().addTo(map)
+  .addAttribution('CMTs from globalcmt.org; faults from ATA, HimaTibetMap, plate boundaries from Bird 2003');
 
 addMarkersToMap(map);
 
