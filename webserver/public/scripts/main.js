@@ -1,19 +1,9 @@
-/**
-var map = L.map( 'map', {
-  center: [48.103803, -121.965733],
-  minZoom: 5,
-  zoom: 6
-});
-**/
-
 L.mapbox.accessToken = 'pk.eyJ1IjoiY29zc2F0b3QiLCJhIjoiVGJyMGU5cyJ9.CMKdx74guBSUyyC-L1fAoA';
+
 var map = L.mapbox.map('map', 'mapbox.streets-satellite', {
     minZoom: 5,
-    // These options apply to the tile layer in the map.
     tileLayer: {
-        // This map option disables world wrapping. by default, it is false.
         continuousWorld: false,
-        // This option disables loading tiles outside of the world bounds.
         noWrap: true
         }
     }).setView([48.103803, -121.965733], 6);
@@ -21,17 +11,28 @@ var map = L.mapbox.map('map', 'mapbox.streets-satellite', {
 L.control.attribution().addTo(map)
   .addAttribution('CMTs from globalcmt.org; faults from ATA, HimaTibetMap, plate boundaries from Bird 2003');
 
+//TODO: Uncomment this and make sure it doesn't throw a CORS error
+/**
+var HTM_url = './data/HimaTibetMap.geojson';
+var ATA_url = './data/ATA.geojson';
+var PB_url = './data/plate_bounds_bird02.geojson';
+
+$.getJSON(HTM_url, function(htm_data) {
+    HTM = L.mapbox.featureLayer(htm_data);
+    HTM.addTo(map);
+    HTM.setStyle({color: 'red'})
+    });
+
+$.getJSON(ATA_url, function(htm_data) {
+    ATA = L.mapbox.featureLayer(htm_data);
+    ATA.addTo(map);
+    ATA.setStyle({color: 'red'})
+    });
+
+var PB = L.mapbox.featureLayer().loadURL(PB_url).addTo(map);
+**/
+
 addMarkersToMap(map);
-
-map.on("zoomend", function() {
-  console.log("Zoomed!");
-  //TODO: Filter current dataset on minZoom
-});
-
-map.on("dragend", function() {
-  console.log("Dragged!");
-  //TODO: Query database for new markers
-});
 
 map.on("moveend", function(e) {
   addMarkersToMap(map);
@@ -40,26 +41,27 @@ map.on("moveend", function(e) {
 function addMarkersToMap(map) {
   $.when(getMarkersFromDB(map)).done((features) => {
     var currentZoom = map.getZoom();
-    var gcmtAboveMinZoom = features.filter(feature =>
+    features = features.filter(feature =>
+      //TODO: add minZoom filter
       true
     );
-    //L.geoJson(gcmtAboveMinZoom).addTo(map);
+
     var markers = L.layerGroup();
-    for (var i = 0; i < gcmtAboveMinZoom.length; ++i) {
-      var popup = gcmtAboveMinZoom[i].properties.title;
-      var m = L.marker([gcmtAboveMinZoom[i].geometry.coordinates[1],
-                        gcmtAboveMinZoom[i].geometry.coordinates[0]],
-                        {icon: L.icon(gcmtAboveMinZoom[i].properties.icon)})
-                      .bindPopup( popup );
-      markers.addLayer(m);
-    }
+    features.forEach(feature => {
+      markers.addLayer(
+        L.marker(
+          [feature.geometry.coordinates[1],
+           feature.geometry.coordinates[0]],
+          {icon: L.icon(feature.properties.icon)}
+        ).bindPopup(feature.properties.title)
+      );
+    });
     map.addLayer(markers);
   });
 }
 
-//TODO: update this method too
 function getMarkersFromDB(map) {
-  var currentBbox = boundsToGeoJSON(map);
+  var currentBbox = getBboxCoords(map);
   return $.ajax({
     url : "http://localhost:3000/",
     type: "POST",
@@ -69,35 +71,12 @@ function getMarkersFromDB(map) {
   });
 }
 
-function boundsToGeoJSON(map) {
+function getBboxCoords(map) {
   var currentBbox = map.getBounds();
-  return [
-    [
-      // SW
-      [
-        currentBbox._southWest.lng,
-        currentBbox._southWest.lat
-      ],
-      // NW
-      [
-        currentBbox._southWest.lng,
-        currentBbox._northEast.lat
-      ],
-      // NE
-      [
-        currentBbox._northEast.lng,
-        currentBbox._northEast.lat
-      ],
-      // SE
-      [
-        currentBbox._northEast.lng,
-        currentBbox._southWest.lat
-      ],
-      // back to SW
-      [
-        currentBbox._southWest.lng,
-        currentBbox._southWest.lat
-      ]
-    ]
-  ];
+  return [[
+    [currentBbox._southWest.lng, currentBbox._southWest.lat],
+    [currentBbox._southWest.lng, currentBbox._northEast.lat],
+    [currentBbox._northEast.lng, currentBbox._northEast.lat],
+    [currentBbox._northEast.lng, currentBbox._southWest.lat],
+    [currentBbox._southWest.lng, currentBbox._southWest.lat]]];
 }
