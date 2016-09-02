@@ -1,5 +1,3 @@
-// See post: http://asmaloney.com/2015/06/code/clustering-markers-on-leaflet-maps
-
 var map = L.map( 'map', {
   center: [48.103803, -121.965733],
   minZoom: 5,
@@ -11,41 +9,43 @@ L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
  subdomains: ['a','b','c']
 }).addTo( map );
 
-var myURL = jQuery( 'script[src$="main.js"]' ).attr( 'src' ).replace( 'main.js', '' );
+addMarkersToMap(map);
 
-var myIcon = L.icon({
-  iconUrl: myURL + 'images/pin24.png',
-  iconRetinaUrl: myURL + 'images/pin48.png',
-  iconSize: [29, 24],
-  iconAnchor: [9, 21],
-  popupAnchor: [0, -14]
+map.on("zoomend", function() {
+  console.log("Zoomed!");
+  //TODO: Filter current dataset on minZoom
 });
 
-addMarkersToMap(map);
+map.on("dragend", function() {
+  console.log("Dragged!");
+  //TODO: Query database for new markers
+});
 
 map.on("moveend", function(e) {
   addMarkersToMap(map);
 });
 
 function addMarkersToMap(map) {
-  $.when(getMarkersFromDB(map)).done((markers) => {
-    var markerClusters = L.markerClusterGroup();
-    for ( var i = 0; i < markers.length; ++i )
-    {
-      var popup = markers[i].properties.title;
-
-      var m = L.marker([markers[i].geometry.coordinates[1], 
-                        markers[i].geometry.coordinates[0]], 
-                        {icon: L.icon(markers[i].properties.icon)})
+  $.when(getMarkersFromDB(map)).done((features) => {
+    var currentZoom = map.getZoom();
+    var gcmtAboveMinZoom = features.filter(feature =>
+      true
+    );
+    //L.geoJson(gcmtAboveMinZoom).addTo(map);
+    var markers = L.layerGroup();
+    for (var i = 0; i < gcmtAboveMinZoom.length; ++i) {
+      var popup = gcmtAboveMinZoom[i].properties.title;
+      var m = L.marker([gcmtAboveMinZoom[i].geometry.coordinates[1],
+                        gcmtAboveMinZoom[i].geometry.coordinates[0]],
+                        {icon: L.icon(gcmtAboveMinZoom[i].properties.icon)})
                       .bindPopup( popup );
-
-      markerClusters.addLayer( m );
+      markers.addLayer(m);
     }
-    map.addLayer( markerClusters );
+    map.addLayer(markers);
   });
 }
 
-
+//TODO: update this method too
 function getMarkersFromDB(map) {
   var currentBbox = boundsToGeoJSON(map);
   return $.ajax({
@@ -59,46 +59,33 @@ function getMarkersFromDB(map) {
 
 function boundsToGeoJSON(map) {
   var currentBbox = map.getBounds();
-  var bboxGeoJSON = {
-    "type": "FeatureCollection",
-    "features": [
-      {
-        "type": "Feature",
-        "properties": {},
-        "geometry": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              // SW
-              [
-                currentBbox._southWest.lng,
-                currentBbox._southWest.lat
-              ],
-              // NW
-              [
-                currentBbox._southWest.lng,
-                currentBbox._northEast.lat
-              ],
-              // NE
-              [
-                currentBbox._northEast.lng,
-                currentBbox._northEast.lat
-              ],
-              // SE
-              [
-                currentBbox._northEast.lng,
-                currentBbox._southWest.lat
-              ],
-              // back to SW
-              [
-                currentBbox._southWest.lng,
-                currentBbox._southWest.lat
-              ]
-            ]
-          ]
-        }
-      }
+  return [
+    [
+      // SW
+      [
+        currentBbox._southWest.lng,
+        currentBbox._southWest.lat
+      ],
+      // NW
+      [
+        currentBbox._southWest.lng,
+        currentBbox._northEast.lat
+      ],
+      // NE
+      [
+        currentBbox._northEast.lng,
+        currentBbox._northEast.lat
+      ],
+      // SE
+      [
+        currentBbox._northEast.lng,
+        currentBbox._southWest.lat
+      ],
+      // back to SW
+      [
+        currentBbox._southWest.lng,
+        currentBbox._southWest.lat
+      ]
     ]
-  }
-  return bboxGeoJSON;
+  ];
 }

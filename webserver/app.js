@@ -1,5 +1,6 @@
 var MongoClient = require("mongodb").MongoClient;
-var mongoUrl = "mongodb://mongo:27017/gcmt_dev";
+//var mongoUrl = "mongodb://mongo:27017/gcmt_dev";
+var mongoUrl = "mongodb://admin:segfault@ds145355.mlab.com:45355/gcmt_dev";
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
@@ -16,14 +17,12 @@ MongoClient.connect(mongoUrl, function(err, db) {
 	});
 
 	app.post("/", function(req, res) {
-
-		var coords = req.body.features[0].geometry.coordinates;
 		var params = {
 			"geometry.coordinates" : {
 				$geoWithin: {
 					$geometry: {
 						type: "Polygon",
-						coordinates: coords
+						coordinates: req.body
 					}
 				}
 			}
