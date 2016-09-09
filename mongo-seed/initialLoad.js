@@ -13,6 +13,7 @@ MongoClient.connect(url, function(err, db) {
   
   var startTime = process.hrtime()[0];
 
+  /**
   var specialjson = JSON.parse(fs.readFileSync("./data/init.geojson", "utf8"));
   console.log("starting to insert init file");
   db.collection("caitlintestcollection").insertMany(specialjson, (err, res) => {
@@ -20,7 +21,8 @@ MongoClient.connect(url, function(err, db) {
     var totalTime = process.hrtime()[0] - startTime;
     console.log("All entries from init inserted OK");
   });
-
+  **/
+  
   filenames.map((filename) => {
     var json = JSON.parse(fs.readFileSync("./data/" + filename + ".geojson", "utf8"));
     var features = json.features;
