@@ -1,6 +1,6 @@
 FROM mongo
 
-COPY init.geojson /init.geojson
+COPY ./data/init.geojson /init.geojson
 CMD mongoimport --host=mongo \
   --db gcmt_dev \
   --collection earthquakes \
