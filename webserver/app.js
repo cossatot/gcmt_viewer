@@ -28,7 +28,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
 			}
 		};
 		//TODO: get rid of limit
-		db.collection("earthquakes").find(params, {limit: 100}).toArray(function(err, docs) {
+		db.collection("caitlintestcollection").find(params, {limit: 100}).toArray(function(err, docs) {
 			console.log(JSON.stringify(params));
 			//TODO: handle error
 			res.json(docs);
