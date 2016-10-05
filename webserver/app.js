@@ -26,14 +26,12 @@ MongoClient.connect(mongoUrl, function(err, db) {
 				}
 			}
 		};
-		//TODO: get rid of limit
-		db.collection("quakes").find(params, {limit: 100}).toArray(function(err, docs) {
+
+		db.collection("quakes").find(params).toArray(function(err, quakes) {
 			if (err) throw err;
-			console.log("query:");
-			console.log(JSON.stringify(params));
-			console.log("result:");
-			console.log(JSON.stringify(docs));
-			res.json(docs);
+			var resArray = [];
+			resArray = resArray.concat(quakes);
+			res.json(resArray);
 		});
 	});
 
