@@ -1,7 +1,7 @@
 L.mapbox.accessToken = 'pk.eyJ1IjoiY29zc2F0b3QiLCJhIjoiVGJyMGU5cyJ9.CMKdx74guBSUyyC-L1fAoA';
 
 var map = L.mapbox.map('map', 'mapbox.streets-satellite', {
-//    minZoom: 5,
+    minZoom: 5,
     tileLayer: {
         continuousWorld: false,
         noWrap: true
@@ -156,8 +156,7 @@ function addMarkersToMap(map) {
   $.when(getMarkersFromDB(map)).done((features) => {
     var currentZoom = map.getZoom();
     features = features.filter(feature =>
-      //TODO: add minZoom filter
-      true
+      feature.properties.minZoom <= currentZoom
     );
 
     //var markers = L.layerGroup();

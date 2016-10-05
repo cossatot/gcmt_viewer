@@ -9,7 +9,7 @@ services:
       - mongo
 
   mongo-seed:
-    build: ./mongo-seed
+    image: strawberrykiwi/mongo-seed
     links:
       - mongo
 
