@@ -11,7 +11,7 @@ services:
       MONGODB_URI: "mongodb://mongo:27017/gcmt_dev"
 
   mongo-seed:
-    image: strawberrykiwi/mongo-seed
+    build: ./mongo-seed
     links:
       - mongo
 
