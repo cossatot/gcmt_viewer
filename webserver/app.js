@@ -1,6 +1,5 @@
 var MongoClient = require("mongodb").MongoClient;
-//var mongoUrl = "mongodb://mongo:27017/gcmt_dev";
-var mongoUrl = "mongodb://admin:segfault@ds145355.mlab.com:45355/gcmt_dev";
+var mongoUrl = "mongodb://mongo:27017/gcmt_dev";
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
@@ -28,9 +27,12 @@ MongoClient.connect(mongoUrl, function(err, db) {
 			}
 		};
 		//TODO: get rid of limit
-		db.collection("caitlintestcollection").find(params, {limit: 100}).toArray(function(err, docs) {
+		db.collection("earthquakes").find(params, {limit: 100}).toArray(function(err, docs) {
+			if (err) throw err;
+			console.log("query:");
 			console.log(JSON.stringify(params));
-			//TODO: handle error
+			console.log("result:");
+			console.log(JSON.stringify(docs));
 			res.json(docs);
 		});
 	});

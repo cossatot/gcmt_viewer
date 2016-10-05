@@ -7,7 +7,6 @@ var map = L.mapbox.map('map', 'mapbox.streets-satellite', {
         noWrap: true
         }
     }).setView([48.103803, -121.965733], 6);
-//    }).setView([ -65.708372954999959, 12.474644874000035 ], 6);
 
 L.control.attribution().addTo(map)
   .addAttribution('CMTs from globalcmt.org; faults from ATA, HimaTibetMap, plate boundaries from Bird 2003');
@@ -34,6 +33,7 @@ var PB = L.mapbox.featureLayer().loadURL(PB_url).addTo(map);
 **/
 
 /** FOR TESTING!!! **/
+/**
 var testFeature = {
   "type": "Feature",
   "properties": {
@@ -132,19 +132,20 @@ var testFeature = {
     ]
   }
 };
-
+**/
 /**
 var polyline = L.multiPolyline(testFeature.geometry.coordinates, {color: "red"}).addTo(map);
 map.fitBounds(polyline.getBounds());
 **/
-
+/**
 var test = L.mapbox.featureLayer();
 test.addLayer(L.geoJson(testFeature, { color: 'red', weight: 1.5, opacity: 1}));
 test.addTo(map);
 //test.setStyle({color: 'red'});
 console.log("done");
+**/
 
-/**
+
 addMarkersToMap(map);
 
 map.on("moveend", function(e) {
@@ -159,10 +160,12 @@ function addMarkersToMap(map) {
       true
     );
 
-    var markers = L.layerGroup();
+    //var markers = L.layerGroup();
+    var markers = L.mapbox.featureLayer();
 
     features.forEach(feature => {
       if (feature.geometry.type == "Point") {
+        console.log("Point!");
         L.marker(
             [feature.geometry.coordinates[1],
              feature.geometry.coordinates[0]],
@@ -170,15 +173,15 @@ function addMarkersToMap(map) {
           ).bindPopup(feature.properties.title).addTo(map);
       } else if (feature.geometry.type == "MultiLineString") {
         console.log("MultiLineString returned!");
-        L.multiPolyline(feature.geometry.coordinates, {color: "red"}).addTo(map);
-
+        //L.multiPolyline(feature.geometry.coordinates, {color: "red"}).addTo(map);
+        markers.addLayer(L.geoJson(feature, { color: 'red', weight: 1.5, opacity: 1}));
       } else {
         console.log("LineString returned!");
-        // type == "LineString"
-        L.polyline(feature.geometry.coordinates, {color: "red"}).addTo(map);
+        markers.addLayer(L.geoJson(feature, { color: 'red', weight: 1.5, opacity: 1}));
       }
     });
-    map.addLayer(markers);
+    //map.addLayer(markers);
+    markers.addTo(map);
   });
 }
 
@@ -202,4 +205,3 @@ function getBboxCoords(map) {
     [currentBbox._northEast.lng, currentBbox._southWest.lat],
     [currentBbox._southWest.lng, currentBbox._southWest.lat]]];
 }
-**/
