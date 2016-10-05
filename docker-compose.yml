@@ -4,9 +4,11 @@ services:
   webserver:
     build: ./webserver
     ports:
-      - "3000:3000"
+      - "80:3000"
     links:
       - mongo
+    environment:
+      MONGODB_URI: "mongodb://mongo:27017/gcmt_dev"
 
   mongo-seed:
     image: strawberrykiwi/mongo-seed

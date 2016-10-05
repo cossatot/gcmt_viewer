@@ -71,7 +71,7 @@ function addMarkersToMap(map) {
 function getMarkersFromDB(map) {
   var currentBbox = getBboxCoords(map);
   return $.ajax({
-    url : "http://localhost:3000/",
+    url : window.location.href,
     type: "POST",
     contentType: "application/json",
     dataType: "json",

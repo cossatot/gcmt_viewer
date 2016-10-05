@@ -1,12 +1,12 @@
 var MongoClient = require("mongodb").MongoClient;
-var mongoUrl = "mongodb://mongo:27017/gcmt_dev";
+var mongoUrl = process.env.MONGODB_URI;
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
 app.use(bodyParser.json());
 app.use("/", express.static("public"));
 
-MongoClient.connect(mongoUrl, function(err, db) {
+MongoClient.connect(mongoUrl || "mongodb://mongo:27017/gcmt_dev", function(err, db) {
 	if (err) throw err;
 
 	app.all("/", function(req, res, next) {
