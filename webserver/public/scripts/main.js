@@ -41,9 +41,9 @@ map.on("moveend", function(e) {
 function addMarkersToMap(map) {
   $.when(getMarkersFromDB(map)).done((features) => {
     var currentZoom = map.getZoom();
-    features = features.filter(feature =>
-      feature.properties.minZoom <= currentZoom
-    );
+    features = features.filter(function(feature) {
+      return (feature.properties.minZoom <= currentZoom);
+    });
 
     var markers = L.mapbox.featureLayer();
 
