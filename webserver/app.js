@@ -9,13 +9,13 @@ app.use("/", express.static("public"));
 MongoClient.connect(mongoUrl || "mongodb://mongo:27017/gcmt_dev", function(err, db) {
 	if (err) throw err;
 
-	app.all("/", function(req, res, next) {
+	app.all("/", (req, res, next) => {
 		res.header("Access-Control-Allow-Origin", "*");
 		res.header("Access-Control-Allow-Headers", "Content-Type");
 		next();
 	});
 
-	app.post("/", function(req, res) {
+	app.post("/", (req, res) => {
 		var params = {
 			"geometry.coordinates" : {
 				$geoWithin: {
@@ -35,7 +35,7 @@ MongoClient.connect(mongoUrl || "mongodb://mongo:27017/gcmt_dev", function(err, 
 		});
 	});
 
-	app.listen(3000, function() {
-		console.log("Server running on 3000");
+	app.listen(3000, () => {
+	console.log("Server running on 3000");
 	});
 });
