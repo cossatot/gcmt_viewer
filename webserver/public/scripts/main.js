@@ -1,6 +1,8 @@
-L.mapbox.accessToken = 'pk.eyJ1IjoiY29zc2F0b3QiLCJhIjoiVGJyMGU5cyJ9.CMKdx74guBSUyyC-L1fAoA';
+/* global L window $*/
 
-var map = L.mapbox.map('map', 'mapbox.streets-satellite', {
+L.mapbox.accessToken = "pk.eyJ1IjoiY29zc2F0b3QiLCJhIjoiVGJyMGU5cyJ9.CMKdx74guBSUyyC-L1fAoA";
+
+var map = L.mapbox.map("map", "mapbox.streets-satellite", {
     minZoom: 5,
     tileLayer: {
         continuousWorld: false,
@@ -9,7 +11,7 @@ var map = L.mapbox.map('map', 'mapbox.streets-satellite', {
     }).setView([48.103803, -121.965733], 6);
 
 L.control.attribution().addTo(map)
-  .addAttribution('CMTs from globalcmt.org; faults from ATA, HimaTibetMap, plate boundaries from Bird 2003');
+  .addAttribution("CMTs from globalcmt.org; faults from ATA, HimaTibetMap, plate boundaries from Bird 2003");
 
 //TODO: Uncomment this and make sure it doesn't throw a CORS error
 /**
@@ -34,20 +36,21 @@ var PB = L.mapbox.featureLayer().loadURL(PB_url).addTo(map);
 
 addMarkersToMap(map);
 
-map.on("moveend", function(e) {
+map.on("moveend", (err) => {
+  if (err) { console.log(err); }
   addMarkersToMap(map);
 });
 
 function addMarkersToMap(map) {
   $.when(getMarkersFromDB(map)).done((features) => {
     var currentZoom = map.getZoom();
-    features = features.filter(function(feature) {
+    features = features.filter((feature) => {
       return (feature.properties.minZoom <= currentZoom);
     });
 
     var markers = L.mapbox.featureLayer();
 
-    features.forEach(feature => {
+    features.forEach((feature) => {
       if (feature.geometry.type == "Point") {
         console.log("Point");
         L.marker(
@@ -57,10 +60,10 @@ function addMarkersToMap(map) {
           ).bindPopup(feature.properties.title).addTo(map);
       } else if (feature.geometry.type == "MultiLineString") {
         console.log("MultiLineString");
-        markers.addLayer(L.geoJson(feature, { color: 'red', weight: 1.5, opacity: 1}));
+        markers.addLayer(L.geoJson(feature, { color: "red", weight: 1.5, opacity: 1}));
       } else {
         console.log("LineString");
-        markers.addLayer(L.geoJson(feature, { color: 'red', weight: 1.5, opacity: 1}));
+        markers.addLayer(L.geoJson(feature, { color: "red", weight: 1.5, opacity: 1}));
       }
     });
 
