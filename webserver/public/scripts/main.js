@@ -32,10 +32,11 @@ function addMarkersToMap(map) {
 }
 
 function addBeachballsToMap(map) {
-  beachballs.clearLayers();
+  //beachballs.clearLayers();
   $.when(getQuakesFromDB(map)).done((quakes) => {
+    var newBeachballs = L.mapbox.featureLayer();
     quakes.forEach((quake) => {
-      beachballs.addLayer(
+      newBeachballs.addLayer(
         L.marker(
           [quake.geometry.coordinates[1],
            quake.geometry.coordinates[0]],
@@ -43,14 +44,18 @@ function addBeachballsToMap(map) {
         ).bindPopup(quake.properties.title)
       )
     });
+    map.removeLayer(beachballs);
+    beachballs = newBeachballs;
+    map.addLayer(beachballs);
   });
 }
 
 function addFaultlinesToMap(map) {
-  faultlines.clearLayers();
+  //faultlines.clearLayers();
   $.when(getFaultsFromDB(map)).done((faults) => {
+    var newFaultlines = L.mapbox.featureLayer();
     faults.forEach((fault) => {
-      faultlines.addLayer(
+      newFaultlines.addLayer(
         L.geoJson(
           fault, 
           {color: "red", 
@@ -59,6 +64,9 @@ function addFaultlinesToMap(map) {
         )
       );
     });
+    map.removeLayer(faultlines);
+    faultlines = newFaultlines;
+    map.addLayer(faultlines);
   });
 }
 
