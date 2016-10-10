@@ -15,23 +15,40 @@ MongoClient.connect(mongoUrl || "mongodb://mongo:27017/gcmt_dev", function(err, 
 		next();
 	});
 
-	app.post("/", (req, res) => {
+	app.post("/quakes", (req, res) => {
 		var params = {
-			"geometry.coordinates" : {
+			"geometry" : {
 				$geoWithin: {
 					$geometry: {
 						type: "Polygon",
-						coordinates: req.body
+						coordinates: req.body.coordinates
+					}
+				}
+			},
+			"properties.minZoom" : {
+				$lte: req.body.minZoom
+			}
+		};
+		db.collection("quakes").find(params).toArray((err, quakes) => {
+			if (err) throw err;
+			res.json(quakes);
+		});
+	});
+
+	app.post("/faults", (req, res) => {
+		var params = {
+			"geometry" : {
+				$geoWithin: {
+					$geometry: {
+						type: "Polygon",
+						coordinates: req.body.coordinates
 					}
 				}
 			}
 		};
-
-		db.collection("quakes").find(params).toArray(function(err, quakes) {
+		db.collection("faults").find(params).toArray((err, faults) => {
 			if (err) throw err;
-			var resArray = [];
-			resArray = resArray.concat(quakes);
-			res.json(resArray);
+			res.json(faults);
 		});
 	});
 
